@@ -3,7 +3,7 @@ Utility for easier interactions with MongoDB in Node applications.
 
 ## Getting Started
  - Add as submodule to your project
-   - ```git submodule add https://github.com/JeremyBankes/core.git modules/mongo```
+   - ```git submodule add https://github.com/JeremyBankes/mongo.git modules/mongo```
  - Ensure that the MonogDB Node.js driver is installed
    - ```npm install --save mongodb```
  - Start using the library!
