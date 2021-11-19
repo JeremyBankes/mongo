@@ -16,7 +16,7 @@ const database = {
 
     /**
      * Creates a mongo Db instance for database interactions
-     * @param {string} database 
+     * @param {string} [databaseName] 
      * @returns 
      */
     open(databaseName) {
@@ -39,7 +39,7 @@ const database = {
          */
         lookup(foreignCollection, foreignField, localField, as, projection = null) {
             const pipeline = [{ $match: { $expr: { $eq: ['$' + foreignField, '$$localField'] } } }];
-            if (projection !== null) pipeline.push(projection);
+            if (projection !== null) pipeline.push({ $project: projection });
             return [
                 { $lookup: { as, from: foreignCollection, let: { localField: '$' + localField }, pipeline } },
                 { $unwind: { path: '$' + as, preserveNullAndEmptyArrays: true } }
@@ -48,7 +48,7 @@ const database = {
 
         /**
          * @param {string} query 
-         * @param {string[]} fields An array of fields to search for 'query' in
+         * @param {string[]} fields An array of fields to search for 'query' in (No $)
          * @returns An array of pipeline stages required to perform a regex search
          */
         search(query, fields) {
