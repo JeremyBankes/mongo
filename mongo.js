@@ -48,7 +48,7 @@ const database = {
 
         /**
          * @param {string} query 
-         * @param {string[]} fields An array of fields to search for 'query' in (No $)
+         * @param {string[]} fields An array of fields to search for 'query' in (No '$')
          * @returns An array of pipeline stages required to perform a regex search
          */
         search(query, fields) {
@@ -62,12 +62,21 @@ const database = {
         /**
          * @param {Date} fromTime Inclusive
          * @param {Date} toTime Exclusive
-         * @param {string} dateField The name of the field containing a Date
+         * @param {string} dateField The name of the field containing a Date (No '$')
          * @returns An array of pipeline stages required to perform a date filter
          */
         between(fromTime, toTime, dateField) {
             return [{ $match: { [dateField]: { $gte: fromTime, $lt: toTime } } }];
-        }
+        },
+
+        /**
+         * @param {string} sortField The name of the field to sort by (No '$')
+         * @param {boolean} ascending 
+         * @returns An array of pipeline stages required for sorting
+         */
+        sort(sortField, ascending) {
+            return [{ $sort: { [sortField]: ascending ? 1 : -1 } }];
+        },
 
     }
 
