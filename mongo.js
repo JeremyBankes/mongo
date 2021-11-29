@@ -47,6 +47,22 @@ const database = {
         },
 
         /**
+         * @param {string} foreignCollection 
+         * @param {string} foreignField 
+         * @param {string} localField An array field
+         * @param {string} as 
+         * @param {Object.<string, number>} [projection] 
+         * @returns An array of pipeline stages required to perform a lookup (with an optional projection)
+         */
+        arrayLookup(foreignCollection, foreignField, localField, as, projection = null) {
+            const pipeline = [{ $match: { $expr: { $in: ['$' + foreignField, '$$localField'] } } }];
+            if (projection !== null) pipeline.push({ $project: projection });
+            return [
+                { $lookup: { as, from: foreignCollection, let: { localField: '$' + localField }, pipeline } }
+            ];
+        },
+
+        /**
          * @param {string} query 
          * @param {string[]} fields An array of fields to search for 'query' in (No '$')
          * @returns An array of pipeline stages required to perform a regex search
